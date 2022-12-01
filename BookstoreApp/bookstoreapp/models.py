@@ -46,6 +46,7 @@ class User(BaseModel, UserMixin):
     password = Column(String(50), nullable=False)
     avatar = Column(String(50))
     user_role = Column(Enum(UserRole), default=UserRole.CASH)
+    receipts = relationship("Receipts", backref='user', lazy=True)
     bookentrys = relationship("BookEntry", backref="user", lazy=True)
     def __str__(self):
         return self.name
@@ -60,6 +61,7 @@ class Customer(BaseModel):
 class Receipt(BaseModel):
     created_time = Column(DateTime, default=datetime.now())
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=True)
     details = relationship('ReceiptDetails', backref='receipt', lazy=True)
 
 class ReceiptDetails(BaseModel):
