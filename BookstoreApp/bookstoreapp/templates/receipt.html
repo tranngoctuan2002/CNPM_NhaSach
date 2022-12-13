@@ -1,0 +1,53 @@
+{% extends 'layout/base.html'%}
+
+{% block css%}<link href="{{url_for('static', filename='css/receipt.css')}}" rel="stylesheet" />{% endblock %}
+
+{%block header%}{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-2 m-2">
+
+    <h1 class="text-center text-success">Tra cứu hóa đơn</h1>
+
+    <div class="content container-fluid d-flex">
+        <div class="list w-75 me-5 pe-5 border-end border-dark">
+            <table class="table">
+                <tr class="border-dark border-bottom">
+                    <th>Mã hóa đơn</th>
+                    <th>Ngày tạo</th>
+                    <th>Tên khách hàng</th>
+                    <th>Tình trạng</th>
+                    <th></th>
+                </tr>
+                {% if receipts %}
+                {% for r in receipts %}
+                <tr>
+                    <td>{{ r[0] }}</td>
+                    <td>{{ r[1] }}</td>
+                    <td>{{ r[2] }}</td>
+                    {% if r[3] %}
+                    <td>Đã thanh toán</td>
+                    {% else %}
+                    <td>Chưa thanh toán</td>
+                    {% endif %}
+                    <td>
+                        <a href="receipt_detail/{{r[0]}}"><input type="button" value="o" class="btn btn-add"></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+        <div class="search w-25">
+            <form>
+                <input type="text" class="form-control me-2 mt-2 w-100" name="id" placeholder="Nhập mã hóa đơn">
+                <input type="text" class="form-control me-2 mt-2" name="name" placeholder="Nhập tên khách hàng">
+                <input type="text" class="form-control me-2 mt-2" name="phone" placeholder="Nhập số điện thoại">
+                <button class="btn btn-pay mt-2" type="submit">Tìm kiếm</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{%block footer%}{% endblock %}

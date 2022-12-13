@@ -1,0 +1,49 @@
+{% extends 'layout/base.html' %}
+{% block css%}
+<link href="{{ url_for('static', filename='css/import.css')}}" rel="stylesheet"/>{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="text-center">NHẬP SÁCH</h2>
+    <div class="content d-flex justify-content-between mt-5">
+        <div class="list w-75 pe-5 border-end border-dark">
+            <table class="table">
+                <tr class="border-bottom border-dark">
+                    <th></th>
+                    <th>SẢN PHẨM</th>
+                    <th>MÃ SP</th>
+                    <th>THỂ LOẠI</th>
+                    <th>SỐ LƯỢNG</th>
+                    <th></th>
+                </tr>
+                {% for c in products %}
+                <tr>
+                    <td style="width:5%">
+                        <img class="img-fluid" src="{{ c[1] }}" alt="{{ c[2] }}">
+                    </td>
+                    <td>{{ c[2] }}</td>
+                    <td>{{ c[0] }}</td>
+                    <td>{{ c[4] }}</td>
+                    <td>{{ c[3] }}</td>
+                    <td>
+                        <input type="button" class="btn btn-add" value="Nhập"/>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="filter w-25 ps-3">
+            <form>
+                <h3>Tìm kiếm</h3>
+                <input type="text" class="form-control mb-3" name="id" placeholder="Nhập mã sản phẩm"/>
+                <input type="text" class="form-control mb-3" name="name" placeholder="Nhập tên"/>
+                <input type="submit" class="btn btn-pay" value="Tìm"/>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

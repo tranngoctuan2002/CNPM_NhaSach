@@ -1,0 +1,20 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+    <div class="detail m-5 d-flex">
+        <div class="image w-25 me-3 p-3 " style="background-color:#abb8c3">
+          <img src="{{ product[0][1] }}" alt="{{ product[0][2] }}" class="img-fluid" >
+        </div>
+        <div class="info w-75 d-flex flex-column justify-content-between">
+            <h3 class="border-bottom border-2 h-5">{{ product[0][2] }}</h3>
+            <h4 class="fw-bold h-5">{{ "{:,.0f}".format(product[0][5]) }} VND</h4>
+            <div class="des mt-3 h-75">
+                <h4>MÔ TẢ</h4>
+                <p style="text-align:justify;">{{ product[0][6] | safe}}</p>
+            </div>
+            <div class="payz h-15">
+                <input type="button" class="btn btn-pay" value="Thêm vào giỏ"/>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,4 +1,43 @@
 {% extends 'layout/base.html' %}
-
+{% block title %}<title>SẠP BÁO LỚN</title>{% endblock %}
 {% block content%}
+
+<div class="pt-5 d-flex flex-column align-items-center w-100" style="background-color: #446084;">
+    <h1 class="dir text-center  text-light text-uppercase pb-3">
+        {% if category %}
+        {{ category.name }}
+        {% else %}
+        SẢN PHẨM
+        {% endif%}
+    </h1>
+    <form>
+        <div class="d-flex">
+            <input type="text" name="kw" class="mb-3 rounded-start border-0 ps-1 pe-5" placeholder="Tìm kiếm...">
+            <button class="bg-danger rounded-end border-0 mb-3 p-1">Tìm</button>
+        </div>
+    </form>
+</div>
+{% if products %}
+<div class="">
+    <div class="row container-fluid">
+        {% for p in products %}
+        <div class="col-md-3 col-sm-12 p-5">
+            <div class="item text-center" id="product{{p[0]}}">
+                <div class="w-5 p-2 img">
+                    <a href="/products/{{p[0]}}"><img src="{{p[1]}}" alt="{{p[2]}}" class="img-fluid"></a>
+                </div>
+                <div class="body-item">
+                    <p class="m-0 text-secondary " style="font-size:13px;">{{p[4]}}</p>
+                    <p class="m-0"><a class="text-dark product_name fw-bold" href="/products/{{p[0]}}">{{p[2]}}</a></p>
+                    <p class="m-0">{{"{:,.0f}".format(p[5]) }} VNĐ</p>
+                </div>
+                <input type="button" class="btn btn-pay mt-2" value="Thêm vào giỏ"/>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Không tìm thấy sản phẩm</p>
+    {% endif%}
+</div>
 {%endblock%}

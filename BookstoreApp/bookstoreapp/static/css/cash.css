@@ -1,0 +1,27 @@
+
+tr:first-child {
+    border-bottom: 2px solid black;
+}
+
+th:nth-child(2) {
+    text-align:left;
+}
+
+th {
+    vertical-align: bottom;
+    text-align:center;
+    font-size: 15px;
+}
+
+td {
+    vertical-align: middle;
+    font-size:14px;
+}
+
+td:not(:nth-child(2)) {
+    text-align: center;
+}
+
+.info-cash {
+    border-top: 2px solid gray
+}

@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+    font-family: "-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Oxygen-Sans, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, sans-serif", sans-serif;
+}
+
+.btn-dlt {
+    border: 2px solid red;
+    border-radius: 50%;
+    color:red;
+    margin:0;
+    padding: 0px 5px
+}
+
+.btn-dlt:hover {
+    background-color:red;
+    color: white;
+}
+
+.btn-add {
+    color:green;
+    border: 2px solid green;
+}
+
+.btn-add:hover {
+    color: white;
+    background-color:green;
+}
+
+.btn-pay {
+    color: blue;
+    border: 2px solid blue;
+}
+
+.btn-pay:hover {
+    color:white;
+    background-color:blue;
+}
+
+ul {
+    list-style-type: none;
+    margin:0;
+    padding-left:0;
+    width:30%;
+}
+
+a{
+    display:block;
+    text-decoration: none;
+}
+
+div.about a {
+    color:black;
+}
+
+div.about a:hover{
+    color: white;
+}
+
+div.img {
+    position:relative;
+    background-color:#abb8c3;
+}
+
+div.img a:hover:after {
+    display:block;
+}
+
+div.img a::after {
+    content: "XEM CHI TIẾT";
+    color: white;
+    background-color: #446084;
+    padding: 10px 0;
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:1px;
+    display:none;
+}
+
+

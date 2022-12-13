@@ -1,1 +1,20 @@
-<h1>Header</h1>
+<nav class="navbar navbar-expand-sm bg-light navbar-light border-bottom border-2 border-dark">
+        <div class="logo w-5">
+            <div class="container">
+                <a class="navbar-brand" href="/">SAPBAOLON</a>
+            </div>
+        </div>
+        <div class="container-fluid cate w-70">
+            <ul class="navbar-nav">
+                {% for c in categories %}
+                <li class="nav-item">
+                    <a class="nav-link active ps-3 pe-3" href="/?category_id={{ c.id }}">{{ c.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="user-feature d-flex w-25 pe-3 ">
+            <div><a class="employee-login p-2 border-end text-dark" href="#">Đăng nhập</a></div>
+            <div><a class="customer-cart p-2 text-dark" href="#">Giỏ hàng</a></div>
+        </div>
+</nav>
