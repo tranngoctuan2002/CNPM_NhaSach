@@ -1,0 +1,144 @@
+{% extends 'layout/base.html' %}
+{%block css%}
+<link href="{{url_for('static', filename='css/cash.css')}}" rel="stylesheet">{% endblock %}
+{% block content %}
+<h4 class="w-100 p-5 bg-primary text-center text-light">GIỎ HÀNG</h4>
+<div class="container-fluid d-flex">
+    <div class="cart-table w-75 pe-3 border-end">
+        <table class="table">
+            <tr class="border-bottom border-dark">
+                <th></th>
+                <th>Sản phẩm</th>
+                <th>Thể loại</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th></th>
+            </tr>
+            {% if 'cart' in session and session['cart'] %}
+            {% for c in session['cart'].values() %}
+            <tr id="cart{{c.id}}">
+                <td style="width:5%;">
+                    <img src="{{c.img}}" alt="{{c.name}}" class="img-fluid"/>
+                </td>
+                <td>{{c.name}}</td>
+                <td>{{c.category}}</td>
+                <td>
+                    <input type="number" min="1" onblur="update_from_cart({{c.id}}, this)" value="{{ c.quantity }}"
+                           class="form-control m-auto" style="width:35%"/>
+                </td>
+                <td>{{"{:,.0f}".format(c.price)}} VNĐ</td>
+                <td>
+                    <input type="button" onclick="delete_from_cart({{c.id}})" class="btn btn-dlt" value="X"/>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+    <div class="cart-info w-25 ps-3">
+        <div class="setting">
+            <h3 class="p-2 bg-danger text-light" style="border-radius:0 50rem 50rem 0;">Tùy chọn đơn hàng</h3>
+
+            <div class="type-payment pb-3">
+                <p class="border-bottom m-1">Phương thức thanh toán</p>
+                <div class=" d-flex justify-content-between w-50 pt-2">
+                    <div>
+                        <input type="radio" id="in_cash" checked name="payment" value="0">
+                        <label for="in_cash">Tại quầy</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="online" name="payment" value="1">
+                        <label for="online">Online</label>
+                    </div>
+                </div>
+            </div>
+            <div class="type-delivery pb-3 border-bottom">
+                <p class="border-bottom m-1">Phương thức nhận hàng</p>
+                <div class=" d-flex justify-content-between w-75 pt-2">
+                    <div>
+                        <input type="radio" id="casher" checked name="deliver" value="0">
+                        <label for="casher">Tại quầy</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="delivery" name="deliver" value="1">
+                        <label for="delivery">Giao hàng tận nhà</label>
+                    </div>
+
+                </div>
+                <div>
+                    <input type="text" class="w-100" id="address_delivery" placeholder="Địa chỉ giao..."/>
+                </div>
+            </div>
+        </div>
+        <div class="info mt-3">
+            <h3 class="p-2 bg-primary text-light" style="border-radius:0 50rem 50rem 0;">Thông tin đơn hàng</h3>
+            <div class="mt-3">
+                <p>Tổng số lượng: <span class="cart-counter fw-bold">{{ cart.total_quantity }}</span></p>
+                <p>Tổng tiền: <span class="cart-amount fw-bold">{{ "{:,.0f}".format(cart.total_value) }} VNĐ</span></p>
+            </div>
+            {% if 'cart' in session and session['cart']%}
+            <div class="info-btn d-flex mb-2">
+                <div class="confirm">
+                    <button type="button" class="btn btn-pay p-1 me-1" data-bs-toggle="modal"
+                            data-bs-target="#myModal">THANH TOÁN
+                    </button>
+                </div>
+                <div class="delete">
+                    <button type="button" class="btn btn-pay p-1" onclick="new_cart()">XÓA GIỎ HÀNG</button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin khách hàng</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Họ và tên:</label>
+                        <input type="text" class="form-control" id="name" required
+                               placeholder="Nhập họ và tên..."
+                               name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">SDT:</label>
+                        <input type="text" class="form-control" id="phone" required
+                               placeholder="Nhập số điện thoại..." name="phone"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa chỉ:</label>
+                        <input type="text" class="form-control" id="address" required
+                               placeholder="Nhập địa chỉ..."
+                               name="address">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" required
+                               placeholder="Nhập email..."
+                               name="email">
+                    </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <input type="button" class="btn btn-danger" onclick="payCart()" value="Xác nhận">
+            </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

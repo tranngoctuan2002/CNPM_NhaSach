@@ -1,7 +1,39 @@
 {% extends 'layout/base.html' %}
-{% block js %}<script src="{{url_for('static', filename='js/cash.js')}}"></script>{% endblock %}
-{% block css %}<link href="{{url_for('static', filename='css/cash.css')}}" rel="stylesheet" />{% endblock %}
-{% block header %}{% endblock %}
+{% block js %}
+<script src="{{url_for('static', filename='js/cash.js')}}"></script>{% endblock %}
+{% block css %}
+<link href="{{url_for('static', filename='css/cash.css')}}" rel="stylesheet"/>{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-between border-bottom border-2 border-dark ">
+    <div class="logo w-75">
+        <div class="container">
+            <a class="navbar-brand" href="/">SAPBAOLON</a>
+        </div>
+    </div>
+    <div class="user-feature d-flex flex-row-reverse pe-3 ">
+        {% if current_user.is_authenticated %}
+        <div class="dropdown w-50 text-end">
+            <button type="button" class="btn border p-0" style="width:15%" data-bs-toggle="dropdown">
+                <img src="{{current_user.avatar}}" class="img-fluid">
+            </button>
+            <ul class="dropdown-menu  dropdown-menu-end">
+                {% if current_user.user_role.value == 1 %}
+                <li><a class="dropdown-item" href="/cash">Thanh toán</a></li>
+                <li><a class="dropdown-item" href="/receipt">Tra cứu hóa đơn</a></li>
+                {% elif current_user.user_role.value == 2 %}
+                <li><a class="dropdown-item" href="/import">Nhập sách</a></li>
+                <li><a class="dropdown-item" href="#">Tra cứu phiếu nhập</a></li>
+                {% else %}
+                <li><a class="dropdown-item" href="/admin">Quản trị</a></li>
+                {% endif %}
+                <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+{% endblock %}
 
 {% block content %}
 <!-- The Modal -->
@@ -20,15 +52,15 @@
                 <form>
                     <div class="mb-3">
                         <label for="name" class="form-label">Customer name:</label>
-                        <input type="text" class="form-control" id="name" required placeholder="Enter customer name"
+                        <input type="text" class="form-control" id="name" required
+                               placeholder="Enter customer name"
                                name="name">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone number:</label>
-                        <input type="text" class="form-control" id="phone" required placeholder="Enter phone number"
-                               name="phone">
+                        <input type="text" class="form-control" id="phone" required
+                               placeholder="Enter phone number" name="phone"/>
                     </div>
-
             </div>
 
             <!-- Modal footer -->
@@ -42,10 +74,11 @@
 </div>
 
 <div class="container-fluid">
-    <h2 class="text-center text-danger">THANH TOÁN</h2>
+    <h2 class="text-center bg-primary text-light pt-5 pb-5">THANH TOÁN</h2>
     <div class="content d-flex justify-content-between mt-5">
         <div class="list border-end pe-5" style="width:70%">
-            <h3 class="text-center">GIỎ HÀNG</h3>
+            <h3 class="border p-2 bg-danger text-light" style="width:20%;border-radius:0 50rem 50rem 0">GIỎ
+                HÀNG</h3>
             <table class="table">
                 <tr class="text-center">
                     <th></th>
@@ -63,12 +96,14 @@
                     <td>{{ c.name }}</td>
                     <td>{{ c.category }}</td>
                     <td>
-                        <input type="number" min="1" onblur="update_to_cash({{c.id}}, this)" value="{{ c.quantity }}"
+                        <input type="number" min="1" onblur="update_to_cash({{c.id}}, this)"
+                               value="{{ c.quantity }}"
                                class="form-control m-auto" style="width:35%"/>
                     </td>
                     <td>{{ "{:,.0f}".format(c.price)}}₫</td>
                     <td>
-                        <input type="button" value="X" class="btn-dlt btn" onclick="delete_from_cash({{ c.id }})"/>
+                        <input type="button" value="X" class="btn-dlt btn"
+                               onclick="delete_from_cash({{ c.id }})"/>
                     </td>
                 </tr>
                 {% endfor %}
@@ -82,23 +117,27 @@
         </div>
         <div class="w-25">
             <div class="form-add">
-                <h4>THÊM SẢN PHẨM</h4>
+                <h4 class="border bg-success text-light p-2" style="width:75%;border-radius:0 50rem 50rem 0">
+                    THÊM SẢN PHẨM</h4>
                 <form>
                     <div class="mb-3 mt-3">
                         <label for="id" class="form-label">Mã sách:</label>
-                        <input type="text" class="form-control" required id="id" placeholder="Nhập mã sách" name="id">
+                        <input type="text" class="form-control" required id="id" placeholder="Nhập mã sách"
+                               name="id">
                     </div>
                     <div class="mb-3">
                         <label for="quantity" class="form-label">Số lượng:</label>
-                        <input type="text" class="form-control" required id="quantity" placeholder="Nhập số lượng"
+                        <input type="text" class="form-control" required id="quantity"
+                               placeholder="Nhập số lượng"
                                name="quantity">
                     </div>
                     <input type="button" class="btn btn-add" onclick="add_to_cash()" Value="Thêm"/>
                 </form>
             </div>
 
-            <div class="info-cash mt-5 pt-5" style="width:100%">
-                <h3 class="">CHI TIẾT HÓA ĐƠN</h3>
+            <div class="info-cash mt-5 mb-5 pt-5" style="width:100%">
+                <h3 class="text-light bg-primary p-2" style="border-radius:0 50rem 50rem 0">CHI TIẾT HÓA
+                    ĐƠN</h3>
                 <p class="mt-3">Tổng sản phẩm: <span class="cash-quantity">{{ cash.total_quantity }}</span></p>
                 <p>Tổng tiền: <span class="cash-value">{{ "{:,.0f}".format(cash.total_value) }}</span>₫</p>
                 {% if 'cash' in session and session['cash']%}

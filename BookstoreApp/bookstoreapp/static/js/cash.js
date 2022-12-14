@@ -26,11 +26,10 @@ function delete_from_cash(product_id) {
     })
 }
 
+
+
 function update_to_cash(product_id, obj) {
-    if(obj.value < 1){
-        alert("Số lượng không phù hợp")
-        obj.value = 1;
-    }
+    number_reasonable(obj)
 
     fetch(`/api/cash/${product_id}`, {
             method:'put',

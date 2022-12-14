@@ -30,7 +30,7 @@ class Product(BaseModel):
     image = Column(String(200))
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
     receipt_details = relationship("ReceiptDetails", backref='product', lazy=True)
-    bookentry_details = relationship("BookEntryDetails", backref='product', lazy=True)
+    bookentry_details = relationship("ImportingDetails", backref='product', lazy=True)
 
 class Tag(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
@@ -49,7 +49,7 @@ class User(BaseModel, UserMixin):
     avatar = Column(String(500))
     user_role = Column(Enum(UserRole), default=UserRole.CASH)
     receipts = relationship("Receipt", backref='user', lazy=True)
-    bookentrys = relationship("BookEntry", backref="user", lazy=True)
+    bookentrys = relationship("Importing", backref="user", lazy=True)
     def __str__(self):
         return self.name
 
@@ -63,6 +63,7 @@ class Customer(BaseModel):
 class Receipt(BaseModel):
     created_time = Column(DateTime, default=datetime.now())
     is_active = Column(Boolean, default=False)
+    delivery_to = Column(String(200), default="Tại cửa hàng")
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
     user_id = Column(Integer, ForeignKey(User.id), nullable=True)
     details = relationship('ReceiptDetails', backref='receipt', lazy=True)
@@ -73,15 +74,15 @@ class ReceiptDetails(BaseModel):
     product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
 
-class BookEntry(BaseModel):
+class Importing(BaseModel):
     entry_time = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
-    details = relationship("BookEntryDetails", backref='bookentry', lazy=True)
+    details = relationship("ImportingDetails", backref='importing', lazy=True)
 
-class BookEntryDetails(BaseModel):
+class ImportingDetails(BaseModel):
     quantity = Column(Integer, default=0)
     product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
-    bookentry_id = Column(Integer, ForeignKey(BookEntry.id), nullable=False)
+    importing_id = Column(Integer, ForeignKey(Importing.id), nullable=False)
 
 class Rule(BaseModel):
     name = Column(String(50), nullable=True)
@@ -89,9 +90,10 @@ class Rule(BaseModel):
 
 if __name__ == "__main__":
     with app.app_context():
+
         db.create_all()
-        #
-        # rl = Rule(name="Số ngày hủy hóa đơn", value=30)
+
+        # rl = Rule(name="Số ngày hủy hóa đơn", value=48)
         # rl2 = Rule(name="Giới hạn số lượng", value=300)
         # rl3= Rule(name="Số lượng nhập", value=150)
         # db.session.add_all([rl, rl2, rl3])
@@ -100,9 +102,11 @@ if __name__ == "__main__":
         # import hashlib
         # password = str(hashlib.md5("1234567".encode('utf-8')).hexdigest())
         # u1 = User(name="Online", username="admin", password=password, avatar="https://i.ytimg.com/vi/Zr-qM5Vrd0g/maxresdefault.jpg", user_role=UserRole.ADMIN)
-        # db.session.add(u1)
+        # u2 = User(name="Tuấn", username="cash", password=password, avatar="https://pbs.twimg.com/profile_images/896034880018153472/B1xVqWPe_400x400.jpg", user_role=UserRole.CASH)
+        # u3 = User(name="Tứng", username='iven', password=password, avatar="https://i.kym-cdn.com/entries/icons/original/000/027/475/Screen_Shot_2018-10-25_at_11.02.15_AM.png", user_role=UserRole.INVEN)
+        # db.session.add_all([u1, u2, u3])
         # db.session.commit()
-        #
+
         # c1 = Category(name="Sách")
         # c2 = Category(name="Tạp chí")
         # c3 = Category(name="Báo")

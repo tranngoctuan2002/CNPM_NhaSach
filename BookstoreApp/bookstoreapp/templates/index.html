@@ -31,7 +31,7 @@
                     <p class="m-0"><a class="text-dark product_name fw-bold" href="/products/{{p[0]}}">{{p[2]}}</a></p>
                     <p class="m-0">{{"{:,.0f}".format(p[5]) }} VNĐ</p>
                 </div>
-                <input type="button" class="btn btn-pay mt-2" value="Thêm vào giỏ"/>
+                <input type="button" class="btn btn-pay mt-2" onclick="add_to_cart({{p[0]}},'{{p[2]}}','{{p[4]}}',{{p[5]}},'{{p[1]}}')" value="Thêm vào giỏ"/>
             </div>
         </div>
         {% endfor %}

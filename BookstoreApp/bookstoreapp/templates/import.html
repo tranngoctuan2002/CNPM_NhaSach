@@ -1,11 +1,45 @@
 {% extends 'layout/base.html' %}
 {% block css%}
 <link href="{{ url_for('static', filename='css/import.css')}}" rel="stylesheet"/>{% endblock %}
-{% block header %}{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-between border-bottom border-2 border-dark ">
+    <div class="logo w-75">
+        <div class="container">
+            <a class="navbar-brand" href="/">SAPBAOLON</a>
+        </div>
+    </div>
+    <div class="user-feature d-flex flex-row-reverse w-25 pe-3 ">
+
+        {% if current_user.is_authenticated %}
+        <div class="dropdown w-50 text-end">
+            <button type="button" class="btn border p-0" style="width:30%" style="width:15%" data-bs-toggle="dropdown">
+                <img src="{{current_user.avatar}}" class="img-fluid">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                {% if current_user.user_role.value == 1 %}
+                <li><a class="dropdown-item" href="/cash">Thanh toán</a></li>
+                <li><a class="dropdown-item" href="/receipt">Tra cứu hóa đơn</a></li>
+                {% elif current_user.user_role.value == 2 %}
+                <li><a class="dropdown-item" href="/import">Nhập sách</a></li>
+                <li><a class="dropdown-item" href="#">Tra cứu phiếu nhập</a></li>
+                {% else %}
+                <li><a class="dropdown-item" href="/admin">Quản trị</a></li>
+                {% endif %}
+                <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+            </ul>
+        </div>
+        {% endif %}
+        <div>
+            <a class="text-dark" href="/import-cart">DANH SÁCH<span class="badge bg-danger import-cart-counter">{{ cart.total_quantity }}</span></a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <h2 class="text-center">NHẬP SÁCH</h2>
+<div class="container-fluid p-0">
+    <h2 class="text-center p-5 bg-success text-light">NHẬP SÁCH</h2>
     <div class="content d-flex justify-content-between mt-5">
         <div class="list w-75 pe-5 border-end border-dark">
             <table class="table">

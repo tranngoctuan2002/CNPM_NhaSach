@@ -1,8 +1,6 @@
-function show_form() {
-    form = document.getElementById("form_add")
-    form.style.display = "block"
-}
-
-function test_func() {
-    console.log(document.getElementById("name").value)
+function number_reasonable(n){
+    if(n.value < 1){
+        alert("Số lượng không phù hợp")
+        n.value = 1;
+    }
 }
