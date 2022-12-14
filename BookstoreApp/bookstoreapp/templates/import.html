@@ -31,7 +31,7 @@
         </div>
         {% endif %}
         <div>
-            <a class="text-dark" href="/import-cart">DANH SÁCH<span class="badge bg-danger import-cart-counter">{{ cart.total_quantity }}</span></a>
+            <a class="text-dark" href="/import-cart">DANH SÁCH<span class="badge bg-danger import-cart-counter">{{ list.total_quantity }}</span></a>
         </div>
     </div>
 </nav>
@@ -61,7 +61,7 @@
                     <td>{{ c[4] }}</td>
                     <td>{{ c[3] }}</td>
                     <td>
-                        <input type="button" class="btn btn-add" value="Nhập"/>
+                        <input type="button" class="btn btn-add" onclick="add_to_list({{c[0]}}, '{{c[2]}}', '{{c[4]}}')" value="Nhập"/>
                     </td>
                 </tr>
                 {% endfor %}

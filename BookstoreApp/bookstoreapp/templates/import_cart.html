@@ -1,4 +1,36 @@
 {% extends 'import.html'%}
 
 {% block content %}
+<h4 class="w-100 p-5 bg-primary text-center text-light">DANH SÁCH NHẬP SÁCH</h4>
+<div class="container-fluid d-flex">
+    <div class="cart-table w-75 pe-3 border-end">
+        <table class="table">
+            <tr class="border-bottom border-dark">
+                <th>Mã SP</th>
+                <th>Sản phẩm</th>
+                <th>Thể loại</th>
+                <th>Số lượng</th>
+                <th></th>
+            </tr>
+            {% if 'list' in session and session['list'] %}
+            {% for c in session['list'].values() %}
+            <tr id="cart{{c.id}}">
+                <td>{{c.id}}</td>
+                <td>{{c.name}}</td>
+                <td>{{c.category}}</td>
+                <td>
+                    <input type="number" min="1" onblur="update_from_cart({{c.id}}, this)" value="{{ c.quantity }}"
+                           class="form-control m-auto" style="width:35%"/>
+                </td>
+                <td>
+                    <input type="button" onclick="delete_from_cart({{c.id}})" class="btn btn-dlt" value="X"/>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+    </div>
+
+</div>
 {% endblock %}

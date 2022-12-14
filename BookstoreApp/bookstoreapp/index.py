@@ -145,6 +145,32 @@ def import_book():
                                 id=request.args.get("id"),
                                 name=request.args.get("name"))
     return render_template('import.html', products=products)
+
+@app.route('/api/import', methods=['POST'])
+def add_to_list():
+    data = request.json
+    key = app.config['LIST_KEY']
+    list = session.get(key,{})
+
+    id = str(data['id'])
+    name = data['name']
+    category = data['category']
+    rule = dao.load_rule_by_id(3).value
+
+    if id in list:
+        list[id]['quantity'] += 1
+    else:
+        list[id] = {
+            "id": id,
+            "name": name,
+            "category": category,
+            "quantity": rule
+        }
+
+    session[key] = list
+
+    return jsonify(utils.stats(list))
+
 @app.route('/import-cart')
 def import_cart():
     return render_template('import_cart.html')
@@ -247,7 +273,8 @@ def commit_attr():
     return {
         'categories': categories,
         'cash': utils.cash_stats(session.get(app.config['CASH_KEY'])),
-        'cart': utils.cash_stats(session.get(app.config['CART_KEY']))
+        'cart': utils.cash_stats(session.get(app.config['CART_KEY'])),
+        'list': utils.stats(session.get(app.config['LIST_KEY']))
     }
 
 if __name__ == '__main__':

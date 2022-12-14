@@ -1,22 +1,19 @@
-
-function add_to_list() {
-
-        name = document.getElementById("name").value
-        tag = document.getElementById("cate").value
-        author = document.getElementById("author").value
-
+function add_to_list(id, name, category) {
         fetch('/api/import', {
         method: "post",
         body: JSON.stringify({
+            "id": id,
             "name": name,
-            "tag": tag,
-            "author": author,
+            "category": category
         }),
         headers: {
             "Content-Type": "application/json"
          }
          }).then(res => res.json()).then((data) => {
             console.info(data)
+            let d = document.getElementsByClassName('import-cart-counter')
+            for (let i = 0; i < d.length; i++)
+            d[i].innerText = data.total_quantity
          })
 
 }
