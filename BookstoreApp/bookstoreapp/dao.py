@@ -1,5 +1,5 @@
 import hashlib
-from bookstoreapp.models import Category, Product, User, Receipt, ReceiptDetails, Customer, prod_tag, Rule
+from bookstoreapp.models import Category, Product, User, Receipt, ReceiptDetails, Customer, Importing, ImportingDetails, Rule
 from bookstoreapp import db, app, login
 from flask_login import current_user
 from sqlalchemy import func
@@ -72,6 +72,21 @@ def check_customer(customer_name, customer_phone):
 
     return query.all()
 
+def save_import(session, user):
+    if session:
+        i = Importing(user=user)
+        db.session.add(i)
+
+        for a in session.values():
+            impde = ImportingDetails(quantity=a['quantity'], product_id=a['id'], importing=i)
+            db.session.add(impde)
+
+        try:
+            db.session.commit()
+        except:
+            return False
+        else:
+            return True
 def save_customer(customer_name, customer_phone, address=None, email=None):
     if not(check_customer(customer_name, customer_phone)):
         c = Customer(name=customer_name, sdt=customer_phone, address=address, email=email)

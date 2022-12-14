@@ -49,7 +49,7 @@ class User(BaseModel, UserMixin):
     avatar = Column(String(500))
     user_role = Column(Enum(UserRole), default=UserRole.CASH)
     receipts = relationship("Receipt", backref='user', lazy=True)
-    bookentrys = relationship("Importing", backref="user", lazy=True)
+    importings = relationship("Importing", backref="user", lazy=True)
     def __str__(self):
         return self.name
 

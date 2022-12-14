@@ -29,9 +29,9 @@ function delete_from_cash(product_id) {
 
 
 function update_to_cash(product_id, obj) {
-    number_reasonable(obj)
+    number_reasonable(obj, 300)
 
-    fetch(`/api/cash/${product_id}`, {
+    fetch(`/api/import-cart/${product_id}`, {
             method:'put',
             body: JSON.stringify({
                 "quantity": obj.value

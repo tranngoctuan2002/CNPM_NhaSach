@@ -1,6 +1,6 @@
-function number_reasonable(n){
-    if(n.value < 1){
+function number_reasonable(n, limit=1){
+    if(n.value < limit){
         alert("Số lượng không phù hợp")
-        n.value = 1;
+        n.value = limit;
     }
 }

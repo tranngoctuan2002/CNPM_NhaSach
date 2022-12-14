@@ -5,7 +5,6 @@ def stats(session):
         for c in session.values():
             total_quantity += c['quantity']
 
-
     return {
         'total_quantity': total_quantity
     }

@@ -14,8 +14,9 @@ def index():
 def product_detail(product_id):
     product = dao.load_product(0, id=product_id)
     return render_template('product_detail.html', product=product)
-@anonymous_user
+
 @app.route('/login', methods=['get','post'])
+@anonymous_user
 def login_my_user():
     if request.method.__eq__("POST"):
         username = request.form['username']
@@ -75,6 +76,7 @@ def update_from_cart(product_id):
 
     return jsonify(utils.cash_stats(cart))
 @app.route('/api/cart/<product_id>', methods=['delete'])
+@login_required
 def delete_from_cart(product_id):
     key = app.config['CART_KEY']
     cart = session.get(key, {})
@@ -139,6 +141,7 @@ def receipt_detail(product_id):
     return render_template('receipt_detail.html', receipt=d, tQuantity=total_quantity, total=total)
 
 @app.route('/import')
+@login_required
 def import_book():
     limit = dao.load_rule_by_id(2).value
     products = dao.load_product(limit,
@@ -146,7 +149,12 @@ def import_book():
                                 name=request.args.get("name"))
     return render_template('import.html', products=products)
 
-@app.route('/api/import', methods=['POST'])
+@app.route('/import-cart')
+@login_required
+def import_cart():
+    return render_template('import_cart.html')
+@app.route('/api/import-cart', methods=['POST'])
+@login_required
 def add_to_list():
     data = request.json
     key = app.config['LIST_KEY']
@@ -171,9 +179,50 @@ def add_to_list():
 
     return jsonify(utils.stats(list))
 
-@app.route('/import-cart')
-def import_cart():
-    return render_template('import_cart.html')
+@app.route('/api/import-cart/<product_id>', methods=['put'])
+@login_required
+def update_from_list(product_id):
+    key = app.config['LIST_KEY']
+    list = session.get(key, {})
+    rule = dao.load_rule_by_id(3)
+
+
+    if list and product_id in list:
+        if int(request.json['quantity']) > rule.value:
+            list[product_id]['quantity'] = int(request.json['quantity'])
+        else:
+            list[product_id]['quantity'] = rule.value
+
+    session[key] = list
+
+    return jsonify(utils.stats(list))
+
+
+@app.route('/api/import-cart/<product_id>', methods=['delete'])
+@login_required
+def delete_from_list(product_id):
+    key = app.config['LIST_KEY']
+    list = session.get(key, {})
+
+    if list and product_id in list:
+        del list[product_id]
+
+    session[key] = list
+    return jsonify(utils.stats(list))
+@app.route('/api/import-cart/create')
+@login_required
+def create():
+    key = app.config['LIST_KEY']
+    list = session.get(key, {})
+
+    try:
+        dao.save_import(list,user=current_user)
+    except:
+        return jsonify({'status': 500})
+    else:
+        del session[key]
+        return jsonify({"status": 200})
+
 @app.route('/cash')
 @login_required
 def cash():
@@ -270,11 +319,14 @@ def new_cash():
 @app.context_processor
 def commit_attr():
     categories = dao.load_categories()
+    limit_import = dao.load_rule_by_id(3).value
     return {
         'categories': categories,
         'cash': utils.cash_stats(session.get(app.config['CASH_KEY'])),
         'cart': utils.cash_stats(session.get(app.config['CART_KEY'])),
-        'list': utils.stats(session.get(app.config['LIST_KEY']))
+        'list': utils.stats(session.get(app.config['LIST_KEY'])),
+        "limit_import": limit_import
+
     }
 
 @app.route('/login_admin', methods=["POST"])
