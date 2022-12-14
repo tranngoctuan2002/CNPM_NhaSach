@@ -277,5 +277,17 @@ def commit_attr():
         'list': utils.stats(session.get(app.config['LIST_KEY']))
     }
 
+@app.route('/login_admin', methods=["POST"])
+def login_admin():
+    username = request.form['username']
+    password = request.form['password']
+
+    user = dao.auth_user(username=username, password=password)
+    if user:
+        login_user(user=user)
+
+    return redirect('/admin')
+
 if __name__ == '__main__':
+    from bookstoreapp.admin import *
     app.run(debug=True)

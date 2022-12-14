@@ -1,0 +1,58 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h1 class="text-center text-success">THỐNG KÊ - BÁO CÁO</h1>
+<h2 class="text-center text-success">THỐNG KÊ DOANH THU THEO THÁNG CHO ĐẦU SÁCH</h2>
+
+<div class="row">
+    <div class="col-md-12 col-sm-20">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Tên sản phẩm</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ "{:,.0f}".format(s[2]) }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-12 col-sm-20">
+        <form>
+            <div class="form-group">
+                <input type="text" placeholder="Nhập tên sách..." name="sel_prod" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Xem từ tháng</label>
+                <input type="date" name="from_month" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Đến tháng</label>
+                <input type="date" name="to_month" class="form-control" />
+            </div>
+            <div>
+                <input type="submit" value="Lọc dữ liệu" class="btn btn-info" />
+            </div>
+        </form>
+        <canvas id="cateStats"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/my-chart.js') }}"></script>
+<script>
+  let data = [], labels=[];
+  {% for s in stats %}
+    data.push({{ s[2] }})
+    labels.push('{{ s[1] }}')
+  {% endfor %}
+  window.onload = function() {
+    drawCateStats(labels, data)
+  }
+</script>
+
+{% endblock %}
