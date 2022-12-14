@@ -30,17 +30,7 @@ class Product(BaseModel):
     image = Column(String(200))
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
     receipt_details = relationship("ReceiptDetails", backref='product', lazy=True)
-    bookentry_details = relationship("ImportingDetails", backref='product', lazy=True)
-
-class Tag(BaseModel):
-    name = Column(String(50), nullable=False, unique=True)
-    def __str__(self):
-        return self.name
-
-prod_tag = db.Table('prod_tag',
-                  Column('product_id', ForeignKey(Product.id), nullable=False, primary_key=True),
-                  Column('tag_id', ForeignKey(Tag.id), nullable=False, primary_key=True))
-
+    importing_details = relationship("ImportingDetails", backref='product', lazy=True)
 
 class User(BaseModel, UserMixin):
     name = Column(String(50), nullable=False)
@@ -65,7 +55,7 @@ class Receipt(BaseModel):
     is_active = Column(Boolean, default=False)
     delivery_to = Column(String(200), default="Tại cửa hàng")
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
-    user_id = Column(Integer, ForeignKey(User.id), nullable=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     details = relationship('ReceiptDetails', backref='receipt', lazy=True)
 
 class ReceiptDetails(BaseModel):
@@ -75,7 +65,7 @@ class ReceiptDetails(BaseModel):
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
 
 class Importing(BaseModel):
-    entry_time = Column(DateTime, default=datetime.now())
+    importing_time = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     details = relationship("ImportingDetails", backref='importing', lazy=True)
 
@@ -92,7 +82,7 @@ if __name__ == "__main__":
     with app.app_context():
 
         db.create_all()
-
+        #
         # rl = Rule(name="Số ngày hủy hóa đơn", value=48)
         # rl2 = Rule(name="Giới hạn số lượng", value=300)
         # rl3= Rule(name="Số lượng nhập", value=150)
@@ -101,12 +91,12 @@ if __name__ == "__main__":
         #
         # import hashlib
         # password = str(hashlib.md5("1234567".encode('utf-8')).hexdigest())
-        # u1 = User(name="Online", username="admin", password=password, avatar="https://i.ytimg.com/vi/Zr-qM5Vrd0g/maxresdefault.jpg", user_role=UserRole.ADMIN)
+        # u1 = User(name="Online", username="admin", password=password, avatar="https://pbs.twimg.com/profile_images/896034880018153472/B1xVqWPe_400x400.jpg", user_role=UserRole.ADMIN)
         # u2 = User(name="Tuấn", username="cash", password=password, avatar="https://pbs.twimg.com/profile_images/896034880018153472/B1xVqWPe_400x400.jpg", user_role=UserRole.CASH)
-        # u3 = User(name="Tứng", username='iven', password=password, avatar="https://i.kym-cdn.com/entries/icons/original/000/027/475/Screen_Shot_2018-10-25_at_11.02.15_AM.png", user_role=UserRole.INVEN)
+        # u3 = User(name="Tứng", username='iven', password=password, avatar="https://pbs.twimg.com/profile_images/896034880018153472/B1xVqWPe_400x400.jpg", user_role=UserRole.INVEN)
         # db.session.add_all([u1, u2, u3])
         # db.session.commit()
-
+        #
         # c1 = Category(name="Sách")
         # c2 = Category(name="Tạp chí")
         # c3 = Category(name="Báo")
@@ -296,7 +286,7 @@ if __name__ == "__main__":
         #
         # db.session.add_all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30])
         # db.session.commit()
-
+        #
 
 
 
