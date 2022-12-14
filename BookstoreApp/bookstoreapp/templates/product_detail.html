@@ -13,7 +13,7 @@
                 <p style="text-align:justify;">{{ product[0][6] | safe}}</p>
             </div>
             <div class="payz h-15">
-                <input type="button" class="btn btn-pay" value="Thêm vào giỏ"/>
+                <input type="button" class="btn btn-pay" onclick="add_to_cart({{product[0][0]}},'{{product[0][2]}}','{{product[0][4]}}',{{product[0][5]}},'{{product[0][1]}}')" value="Thêm vào giỏ"/>
             </div>
         </div>
     </div>
