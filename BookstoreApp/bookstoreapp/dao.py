@@ -106,12 +106,38 @@ def auth_user(username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     return User.query.filter(User.username.__eq__(username.strip()),
                              User.password.__eq__(password)).first()
+
+def product_revenue_by_month(sel_prod=None, from_month=None, to_month=None):
+    query = db.session.query(Product.id, Product.name, func.sum(ReceiptDetails.quantity * ReceiptDetails.price)) \
+        .join(ReceiptDetails, ReceiptDetails.product_id.__eq__(Product.id)) \
+        .join(Receipt, ReceiptDetails.receipt_id.__eq__(Receipt.id))
+
+    if sel_prod:
+        query = query.filter(Product.name.contains(sel_prod))
+    if from_month:
+        query = query.filter(Receipt.created_time.__ge__(from_month))
+    if to_month:
+        query = query.filter(Receipt.created_time.__le__(to_month))
+
+    return query.group_by(Product.id).all()
+
+def stats_revenue_by_prod(sel_month=None):
+    query = db.session.query(Category.id, Category.name, func.sum(ReceiptDetails.quantity * ReceiptDetails.price)) \
+        .join(Product, Product.category_id.__eq__(Category.id)) \
+        .join(ReceiptDetails, ReceiptDetails.product_id.__eq__(Product.id)) \
+        .join(Receipt, ReceiptDetails.receipt_id.__eq__(Receipt.id))
+
+    if sel_month:
+        query = query.filter(Receipt.created_time.contains(sel_month))
+
+    return query.group_by(Category.id).all()
+
 @login.user_loader
 def load_user_by_id(user_id):
     return User.query.get(user_id)
 
 if __name__ == "__main__":
     with app.app_context():
-        print(check_customer(customer_name="Tuấn", customer_phone="0388005529"))
+        print()
 
 
